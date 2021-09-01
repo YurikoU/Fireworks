@@ -8,13 +8,18 @@
 const SCREEN_W = 800;
 const SCREEN_H = 600;
 
-let $canvas = document.getElementById("canvas");
-let ctx     = $canvas.getContext("2d");
-
+//Canvas setting
+let $canvas    = document.getElementById("canvas");
+let ctx        = $canvas.getContext("2d");
 $canvas.width  = SCREEN_W;
 $canvas.height = SCREEN_H;
 
-//Keep mainLoop() performing by a certain period
+//Array to store fireworks and it's afterimage
+let fireworks   = [];
+let afterImages = [];
+
+
+//Keep mainLoop() performing by a certain FPS
 setInterval( mainLoop, 1000/60 );
 
 
@@ -34,19 +39,12 @@ class AfterImage {
     }
 
     update () {
-        if ( this.isKillingItself ) {
-            return;
-        }
-
-        if ( --this.counter == 0 ) {
-            this.isKillingItself = true;
-        }
+        if ( this.isKillingItself ) { return; }
+        if ( --this.counter == 0 )  { this.isKillingItself = true; }
     }
 
     draw () {
-        if ( this.isKillingItself ) {
-          return;
-        }
+        if ( this.isKillingItself ) { return; }
 
         ctx.globalAlpha = 1.0 * this.counter / 10;
         ctx.fillStyle = "#FFEE88";
@@ -78,18 +76,14 @@ class Firework {
     }
 
     update () {
-        if ( this.isKillingItself ) {
-            return;
-        }
+        if ( this.isKillingItself ) { return; }
 
         this.x       += this.vectorX;
         this.y       += this.vectorY;
         this.vectorY += this.gravity;
 
         //If Y is out of the screen
-        if ( SCREEN_H < this.y>>8 ) {
-            this.isKillingItself = true;
-        }
+        if ( SCREEN_H < (this.y>>8) ) { this.isKillingItself = true; }
 
         if ( this.type == 0 ) {
             //If the firework move downward
@@ -111,16 +105,12 @@ class Firework {
                 }
             }
         } else {
-            if ( --this.duration == 0 ) {
-                this.isKillingItself = true;
-            }
+            if ( --this.duration == 0 ) { this.isKillingItself = true; }
         }
     }
 
     draw () {
-        if ( this.isKillingItself ) {
-            return;
-        }
+        if ( this.isKillingItself ) { return; }
 
         ctx.globalAlpha = 1.0;//No opacity
         ctx.fillStyle   = "#FFEE88";
@@ -129,18 +119,13 @@ class Firework {
 }
 
 
-//Array to store fireworks and it's afterimage
-let fireworks   = [];
-let afterImages = [];
-
-
 function update () {
     //Update fireworks
     for ( let i = (fireworks.length-1); 0 <= i; i-- ) {
         fireworks[ i ].update();
 
         //Once the flag is true, erase the element from the array
-        if ( fireworks[ i ].isKillingItself ) {
+        if ( fireworks[ i ].isKillingItself ) { 
             fireworks.splice( i, 1 );
         }
     }
@@ -163,12 +148,12 @@ function draw () {
     ctx.fillRect( 0, 0, SCREEN_W, SCREEN_H );
 
     //Draw afterimages    
-    for ( let i = 0; (afterImages.length-1); i-- ) {
+    for ( let i = (afterImages.length-1); 0 <= i; i-- ) {
         afterImages[ i ].draw();
     }
 
     //Draw fireworks    
-    for ( let i = 0; (fireworks.length-1); i-- ) {
+    for ( let i = (fireworks.length-1); 0 <= i; i-- ) {
         fireworks[ i ].draw();
     }
 }
@@ -181,12 +166,11 @@ function mainLoop () {
 
 
 
+//Press a space key to launch a firework 
 document.onkeydown = function ( e ) {
-
-    //Press a space key to launch a firework 
     if ( e.code == 'Space' ) {
         fireworks.push( 
-            new Firework( SCREEN_W/2, SCREEN_H/2, 0, -1000, 4 )
+            new Firework( SCREEN_W/2, SCREEN_H, 0, -1000, 4 )
         );
     }
 }
