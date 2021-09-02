@@ -3,7 +3,6 @@
 
 
 
-
 //Screen size (px)
 const SCREEN_W = 800;
 const SCREEN_H = 600;
@@ -29,7 +28,6 @@ function randomInt ( min, max ) {
 }
 
 
-
 class AfterImage {
     constructor ( x, y ) {
         this.x = x;
@@ -39,20 +37,16 @@ class AfterImage {
     }
 
     update () {
-        if ( this.isKillingItself ) { return; }
+        if ( this.isKillingItself ) { return; } //If the flag is true, exit if() loop
         if ( --this.counter == 0 )  { this.isKillingItself = true; }
     }
 
     draw () {
-        if ( this.isKillingItself ) { return; }
+        if ( this.isKillingItself ) { return; } //If the flag is true, exit if() loop
 
         ctx.globalAlpha = 1.0 * this.counter / 10;
         ctx.fillStyle = "#FFEE88";
         ctx.fillRect( this.x>>8, this.y>>8, 2, 2 );
-
-        afterImages.push(
-            new AfterImage( this.x, this.y )
-        );
     }
 }
 
@@ -68,15 +62,15 @@ class Firework {
         
         if ( d == undefined ) {
             this.duration = 200;//200 frames
-            this.type     = 0;
-          } else {
+            this.type     = 0;//Moving direction is upward
+        } else {
             this.duration = d;
-            this.type     = 1;
+            this.type     = 1;//Moving direction is downward
         }
     }
 
     update () {
-        if ( this.isKillingItself ) { return; }
+        if ( this.isKillingItself ) { return; }//If the flag is true, exit if() loop
 
         this.x       += this.vectorX;
         this.y       += this.vectorY;
@@ -85,8 +79,9 @@ class Firework {
         //If Y is out of the screen
         if ( SCREEN_H < (this.y>>8) ) { this.isKillingItself = true; }
 
+        //While the moving direction is upward
         if ( this.type == 0 ) {
-            //If the firework move downward
+            //Once the firework starts falling down
             if ( 0 < this.vectorY ) {
                 this.isKillingItself = true;
 
@@ -100,23 +95,29 @@ class Firework {
 
 
                     fireworks.push( 
-                      new Firework( this.x>>8, this.y>>8, vx, vy, 1, 200 )
+                        new Firework( this.x>>8, this.y>>8, vx, vy, 1, 200 )
                     );
                 }
             }
-        } else {
+        } else { 
+            //If this.type is 1
+            //While the moving direction is downward
             if ( --this.duration == 0 ) { this.isKillingItself = true; }
         }
     }
 
     draw () {
-        if ( this.isKillingItself ) { return; }
+        if ( this.isKillingItself ) { return; } //If the flag is true, exit if() loop
 
         ctx.globalAlpha = 1.0;//No opacity
         ctx.fillStyle   = "#FFEE88";
         ctx.fillRect( this.x>>8, this.y>>8, 2, 2 );
+        
+        afterImages.push(
+            new AfterImage( this.x, this.y )
+        );
     }
-}
+} 
 
 
 function update () {
@@ -170,7 +171,7 @@ function mainLoop () {
 document.onkeydown = function ( e ) {
     if ( e.code == 'Space' ) {
         fireworks.push( 
-            new Firework( SCREEN_W/2, SCREEN_H, 0, -1000, 4 )
+            new Firework( SCREEN_W/2, SCREEN_H, 0, -800, 4 )
         );
     }
 }
