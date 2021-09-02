@@ -17,7 +17,6 @@ $canvas.height = SCREEN_H;
 let fireworks   = [];
 let afterImages = [];
 
-
 //Keep mainLoop() performing by a certain FPS
 setInterval( mainLoop, 1000/60 );
 
@@ -89,6 +88,7 @@ class Firework {
                     let ranAngle = randomInt(  0, 360 );
                     let ranSpeed = randomInt( 10, 400 );
 
+                    //Explode the firework
                     //Moving amount in the X-axis and Y-axis direction
                     let vx = Math.cos( ranAngle * Math.PI / 180 ) * ranSpeed;
                     let vy = Math.sin( ranAngle * Math.PI / 180 ) * ranSpeed;
@@ -119,6 +119,7 @@ class Firework {
 } 
 
 
+//Update fireworks and afterimages
 function update () {
     //Update fireworks
     for ( let i = (fireworks.length-1); 0 <= i; i-- ) {
@@ -142,6 +143,7 @@ function update () {
 }
 
 
+//Draw the night sky, fireworks and afterimages
 function draw () {
     //Draw the night sky
     ctx.fillStyle = "#222222";
@@ -165,12 +167,12 @@ function mainLoop () {
 }
 
 
-
-//Press a space key to launch a firework 
+//Launch a firework once a user presses a space key
 document.onkeydown = function ( e ) {
     if ( e.code == 'Space' ) {
+        let ranX = Math.random()*SCREEN_W;
         fireworks.push( 
-            new Firework( SCREEN_W/2, SCREEN_H, 0, -800, 4 )
+            new Firework( ranX, SCREEN_H, 0, -800, 4 )
         );
     }
 }
