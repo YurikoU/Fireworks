@@ -90,9 +90,8 @@ class Firework {
                     let ranSpeed = randomInt( 10, 400 );
 
                     //Moving amount in the X-axis and Y-axis direction
-                    let vx = Math.cos( ranAngle * MathPI / 180 ) * ranSpeed;
-                    let vy = Math.sin( ranAngle * MathPI / 180 ) * ranSpeed;
-
+                    let vx = Math.cos( ranAngle * Math.PI / 180 ) * ranSpeed;
+                    let vy = Math.sin( ranAngle * Math.PI / 180 ) * ranSpeed;
 
                     fireworks.push( 
                         new Firework( this.x>>8, this.y>>8, vx, vy, 1, 200 )
